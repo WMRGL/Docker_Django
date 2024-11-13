@@ -2,6 +2,7 @@
 # syntax=docker/dockerfile:1
 
 ARG PYTHON_VERSION=<Python version>
+#This should be updated to a specific digest - this guarantees the same image version will always be used.
 FROM python:${PYTHON_VERSION}-slim as base
 
 # Prevents Python from writing pyc files.

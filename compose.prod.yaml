@@ -10,7 +10,7 @@
 services:
   web:
     build: .
-    container_name: barcodescanner_django
+    container_name: <appname>_django
     #command: gunicorn mysite.wsgi:application --bind 0.0.0.0:8000
     #bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     expose:
@@ -22,7 +22,7 @@ services:
     env_file:
       - mysite\.env
     depends_on:
-      - barcodescanner-postgres
+      - <appname>_postgres
     restart: always
 
   nginx:
@@ -36,9 +36,9 @@ services:
       - web
     restart: always
 
-  barcodescanner-postgres:
+  <appname>_postgres:
     image: postgres:16
-    container_name: barcodescanner_db
+    container_name: <appname>_db
     env_file:
       - mysite\.env
     ports:
