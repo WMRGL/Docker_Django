@@ -5,6 +5,11 @@ ARG PYTHON_VERSION=<Python version>
 #This should be updated to a specific digest - this guarantees the same image version will always be used.
 FROM python:${PYTHON_VERSION}-slim as base
 
+# This should be updated to a specific digest - this guarantees the same image version will always be used.
+# format = image:tag@digest
+# e.g. python:${PYTHON_VERSION}-slim@sha256:ac212230555ffb7ec17c214fb4cf036ced11b30b5b460994376b0725c7f6c151 as base
+FROM python:${PYTHON_VERSION}-<tag>>@<digest> as base
+
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 # Keeps Python from buffering stdout and stderr to avoid situations where
@@ -28,8 +33,8 @@ RUN adduser \
 
 # Install required system packages and ODBC driver for SQL Server
 RUN apt-get update && apt-get install -y \
-    curl \
     apt-transport-https \
+    curl \
     gnupg \
     unixodbc-dev \
     && curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/microsoft.gpg \
@@ -58,9 +63,11 @@ COPY . .
 
 # # Expose the port that the application listens on.
 # EXPOSE 8000
-#
+
 # # Run the application.
-# CMD python manage.py runserver
+CMD python manage.py collectstatic --no-input \
+    python manage.py makemigrations \
+    python manage.py migrate
 
 # entrypoint shell scripts to be executed
 COPY ./entrypoint.sh /

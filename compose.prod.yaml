@@ -14,13 +14,13 @@ services:
     #command: gunicorn mysite.wsgi:application --bind 0.0.0.0:8000
     #bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     expose:
-      - 8000
+      - <port>
     volumes:
       - .:/app
       - static_volume:/app/static
     #  - static_volume:/home/app/web/staticfiles
     env_file:
-      - mysite\.env
+      - <.env file path>
     depends_on:
       - <appname>_postgres
     restart: always
@@ -31,23 +31,20 @@ services:
       - static_volume:/app/static
       #- static_volume:/home/app/web/staticfiles
     ports:
-      - 8000:8000
+      - <port>:<port>
     depends_on:
       - web
     restart: always
 
   <appname>_postgres:
-    image: postgres:16
+    image: postgres:<version_number>
     container_name: <appname>_db
     env_file:
-      - mysite\.env
+      - <.env file path>
     ports:
       - '5432:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
-
-
-
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
