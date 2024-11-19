@@ -17,7 +17,7 @@ services:
       - <port>
     volumes:
       - .:/app
-      - <appname>_static_volume:/app/static
+      - static_volume:/app/static
     #  - static_volume:/home/app/web/staticfiles
     env_file:
       - <.env file path>
@@ -28,7 +28,7 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - <appname>_static_volume:/app/static
+      - static_volume:/app/static
       #- static_volume:/home/app/web/staticfiles
     ports:
       - <port>:<port>
@@ -44,7 +44,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - <appname>_pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
@@ -74,8 +74,8 @@ services:
 #       timeout: 5s
 #       retries: 5
 volumes:
-   <appname>_pg_data:
-   <appname>_static_volume:
+   pg_data:
+   static_volume:
 
 # secrets:
 #   db-password:
