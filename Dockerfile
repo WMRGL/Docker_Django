@@ -2,9 +2,6 @@
 # syntax=docker/dockerfile:1
 
 ARG PYTHON_VERSION=<Python version>
-#This should be updated to a specific digest - this guarantees the same image version will always be used.
-FROM python:${PYTHON_VERSION}-slim as base
-
 # This should be updated to a specific digest - this guarantees the same image version will always be used.
 # format = image:tag@digest
 # e.g. python:${PYTHON_VERSION}-slim@sha256:ac212230555ffb7ec17c214fb4cf036ced11b30b5b460994376b0725c7f6c151 as base
