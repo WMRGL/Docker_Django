@@ -8,32 +8,45 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  <appname>_postgres:
-    image: postgres:16
-    container_name: postgres_db
-    env_file:
-      - mysite\.env
-    ports:
-      - '5432:5432'
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-
   web:
     build: .
     container_name: <appname>_django
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - 8000:8000
+    expose:
+      - <port>
     volumes:
       - .:/app
+      - static_volume:/app/static
+    #  - static_volume:/home/app/web/staticfiles
     env_file:
-      - mysite\.env
+      - <.env file path>
     depends_on:
       - <appname>_postgres
     develop:
       watch:
         - action: rebuild
           path: .
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/app/static
+      #- static_volume:/home/app/web/staticfiles
+    ports:
+      - <port>:<port>
+    depends_on:
+      - web
+    restart: always
+
+  <appname>_postgres:
+    image: postgres:<version_number>
+    container_name: <appname>_db
+    env_file:
+      - <.env file path>
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
@@ -64,6 +77,8 @@ services:
 #       retries: 5
 volumes:
    pg_data:
+   static_volume:
+
 # secrets:
 #   db-password:
 #     file: db/password.txt
