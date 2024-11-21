@@ -5,7 +5,7 @@ ARG PYTHON_VERSION=<Python version>
 # This should be updated to a specific digest - this guarantees the same image version will always be used.
 # format = image:tag@digest
 # e.g. python:${PYTHON_VERSION}-slim@sha256:ac212230555ffb7ec17c214fb4cf036ced11b30b5b460994376b0725c7f6c151 as base
-FROM python:${PYTHON_VERSION}-<tag>>@<digest> as base
+FROM python:${PYTHON_VERSION}-<tag>@<digest> as base
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -50,13 +50,13 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
 
-
-
-# Switch to the non-privileged user to run the application.
-USER appuser
-
 # Copy the source code into the container.
 COPY . .
+
+#change ownership
+RUN chown -R appuser:appuser static
+# Switch to the non-privileged user to run the application.
+USER appuser
 
 # # Expose the port that the application listens on.
 # EXPOSE 8000
