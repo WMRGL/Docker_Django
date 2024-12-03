@@ -55,16 +55,9 @@ COPY . .
 
 #change ownership
 RUN chown -R appuser:appuser static
+
 # Switch to the non-privileged user to run the application.
 USER appuser
-
-# # Expose the port that the application listens on.
-# EXPOSE 8000
-
-# # Run the application.
-CMD python manage.py collectstatic --no-input \
-    python manage.py makemigrations \
-    python manage.py migrate
 
 # entrypoint shell scripts to be executed
 COPY ./entrypoint.sh /

@@ -25,17 +25,10 @@ services:
       watch:
         - action: rebuild
           path: .
-
-  nginx:
-    build: ./nginx
-    volumes:
-      - static_volume:/app/static
-      #- static_volume:/home/app/web/staticfiles
     ports:
       - <port>:<port>
-    depends_on:
-      - web
-    restart: always
+    environment:
+      DJANGO_ENV: development
 
   <appname>_postgres:
     image: postgres:<version_number>
