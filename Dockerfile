@@ -15,6 +15,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# make staticfiles directory ready for collectstatic command.
+RUN mkdir -p /app/staticfiles
+
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 ARG UID=10001
@@ -54,10 +57,16 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY . .
 
 #change ownership
-RUN chown -R appuser:appuser static
+RUN chown -R appuser:appuser /app
 
 # Switch to the non-privileged user to run the application.
 USER appuser
+
+# This will collect all static files into the directory specified by STATIC_ROOT in your settings.py
+RUN SECRET_KEY=dummy \
+    DEFAULT_URL=sqlite:////tmp/db.sqlite3 \
+    SHIRE_URL=sqlite:////tmp/db.sqlite3 \
+    python manage.py collectstatic --noinput
 
 # entrypoint shell scripts to be executed
 COPY ./entrypoint.sh /
