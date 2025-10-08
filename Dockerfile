@@ -66,6 +66,8 @@ USER appuser
 RUN SECRET_KEY=dummy \
     DEFAULT_URL=sqlite:////tmp/db.sqlite3 \
     SHIRE_URL=sqlite:////tmp/db.sqlite3 \
+    ALLOWED_HOSTS="localhost" \
+    CSRF_TRUSTED_ORIGINS="http://localhost:8000" \
     python manage.py collectstatic --noinput
 
 # entrypoint shell scripts to be executed
